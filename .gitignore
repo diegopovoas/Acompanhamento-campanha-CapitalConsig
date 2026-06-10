@@ -1,0 +1,4 @@
+# Ignora tudo exceto o dashboard publicado
+*
+!.gitignore
+!index.html

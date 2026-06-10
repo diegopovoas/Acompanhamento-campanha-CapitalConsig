@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campanha Capital Consig — Nova Promotora</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg:      #111827;
+  --bg2:     #1a2336;
+  --bg3:     #1f2e4a;
+  --bg4:     #273659;
+  --border:  rgba(255,255,255,.09);
+  --border2: rgba(255,255,255,.16);
+  --text:    #eaedf6;
+  --text2:   #8892ac;
+  --text3:   #505a78;
+  --accent:  #00d4a0;
+  --accent2: #0099ff;
+  --gold:    #f5c842;
+  --silver:  #b0b8cc;
+  --bronze:  #e07c4a;
+  --red:     #ff4d6d;
+  --amber:   #f5a623;
+  --inss:    #4a9eff;
+  --siape:   #a78bfa;
+  --gov:     #34d399;
+  --pref:    #fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── BG DECORATION ── */
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 95%  -5%, rgba(0,212,160,.13) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at  0% 85%, rgba(0,153,255,.09) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 110%, rgba(167,139,250,.06) 0%, transparent 55%);
+  pointer-events:none;z-index:0;
+}
+
+.shell{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:0 24px 60px}
+
+/* ── HEADER ── */
+.top-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 0 28px;border-bottom:1px solid var(--border);
+  margin-bottom:28px;flex-wrap:wrap;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-dot{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#00a878);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#000;
+}
+.brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--text);letter-spacing:-.3px}
+.brand-sub{font-size:11px;color:var(--text3);margin-top:1px;font-family:'DM Mono',monospace;letter-spacing:.5px}
+.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:999px;font-size:11px;font-weight:500;
+  border:1px solid var(--border2);background:var(--bg3);color:var(--text2);
+  font-family:'DM Mono',monospace;
+}
+.chip-live{background:rgba(0,212,160,.1);border-color:rgba(0,212,160,.25);color:var(--accent)}
+.chip-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.kpi{
+  background:linear-gradient(160deg,var(--bg2) 0%,rgba(27,35,60,.9) 100%);
+  border:1px solid var(--border);border-radius:16px;
+  padding:20px 22px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.kpi:hover{border-color:var(--border2)}
+.kpi::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--accent-line,var(--accent)),transparent);
+  opacity:.85;
+}
+.kpi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:'DM Mono',monospace}
+.kpi-value{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;color:var(--text);line-height:1;letter-spacing:-.5px}
+.kpi-sub{font-size:11px;color:var(--text2);margin-top:6px}
+
+/* ── META PROGRESS ── */
+.meta-block{
+  background:linear-gradient(160deg,var(--bg2) 0%,rgba(27,35,60,.9) 100%);
+  border:1px solid var(--border);border-radius:16px;
+  padding:22px 26px;margin-bottom:20px;
+}
+.meta-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.meta-title{font-family:'Syne',sans-serif;font-weight:600;font-size:13px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px}
+.meta-pct{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--amber);line-height:1}
+.meta-bar-track{height:14px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;position:relative}
+.meta-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#d4920a,var(--amber),#ffb347);position:relative;transition:width .8s ease;box-shadow:0 0 12px rgba(245,200,66,.3)}
+.meta-bar-fill::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25))}
+.meta-nums{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3)}
+
+/* ── CONV CARDS ── */
+.conv-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:700px){.conv-row{grid-template-columns:repeat(2,1fr)}}
+.conv-card{
+  background:linear-gradient(170deg,var(--bg2) 60%,rgba(27,35,60,.7) 100%);
+  border:1px solid var(--border);border-radius:14px;
+  padding:18px;position:relative;overflow:hidden;
+  transition:border-color .2s,transform .15s;
+}
+.conv-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.conv-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:4px;
+  background:var(--cc,#fff);opacity:.65;
+}
+.conv-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.5px;margin-bottom:10px;font-family:'DM Mono',monospace}
+.conv-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cc)}
+.conv-val{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text);margin-bottom:4px;letter-spacing:-.3px}
+.conv-ops{font-size:11px;color:var(--text3)}
+
+/* ── TABS ── */
+.tabs-wrap{display:flex;gap:3px;margin-bottom:22px;background:rgba(255,255,255,.04);padding:5px;border-radius:14px;border:1px solid var(--border);flex-wrap:wrap}
+.tab-btn{
+  flex:1;min-width:100px;padding:10px 16px;border:none;background:transparent;
+  color:var(--text3);font-size:12px;font-weight:600;cursor:pointer;border-radius:10px;
+  transition:.2s;white-space:nowrap;font-family:'DM Sans',sans-serif;letter-spacing:.2px;
+}
+.tab-btn:hover{color:var(--text2);background:rgba(255,255,255,.05)}
+.tab-btn.on{
+  background:linear-gradient(135deg,rgba(0,212,160,.14),rgba(0,212,160,.06));
+  color:var(--accent);
+  box-shadow:0 2px 8px rgba(0,0,0,.25),inset 0 0 0 1px rgba(0,212,160,.18);
+}
+.panel{display:none}.panel.on{display:block}
+
+/* ── TABLE WRAPPER ── */
+.tbl-wrap{overflow-x:auto;border-radius:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.tbl thead{background:rgba(255,255,255,.03)}
+.tbl th{
+  padding:11px 8px;font-size:10px;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid var(--border);
+  text-align:center;font-family:'DM Mono',monospace;white-space:nowrap;
+}
+.tbl th.l{text-align:left}
+.tbl td{padding:0;border-bottom:1px solid rgba(255,255,255,.05)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.04)!important}
+
+/* promoted rows */
+.row-g1 td{background:rgba(245,200,66,.09)}
+.row-g1 td:first-child{border-left:3px solid var(--gold);padding-left:14px}
+.row-g2 td{background:rgba(180,190,210,.05)}
+.row-g2 td:first-child{border-left:3px solid var(--silver);padding-left:14px}
+.row-g3 td{background:rgba(212,129,58,.05)}
+.row-g3 td:first-child{border-left:3px solid var(--bronze);padding-left:14px}
+.row-pr td{background:rgba(0,212,160,.06)}
+.row-pr td:first-child{border-left:3px solid rgba(0,212,160,.55);padding-left:14px}
+.row-out td{opacity:.38}
+.row-out td:first-child{border-left:3px solid rgba(255,255,255,.04);padding-left:14px}
+
+.cell{display:block;padding:9px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cell.c{text-align:center}
+.cell.r{text-align:right}
+
+/* POSITION — sem medalhas, só cor e peso */
+.pos{font-family:'Syne',sans-serif;font-weight:800;display:inline-block;text-align:right;min-width:22px;line-height:1;letter-spacing:-.5px}
+.p1{color:#f5c842;font-size:20px}
+.p2{color:#b0b8cc;font-size:18px}
+.p3{color:#d4813a;font-size:17px}
+.ppr{color:var(--accent);font-size:15px}
+.pout{color:var(--text3);font-size:13px;font-weight:600;opacity:.7}
+.px{color:var(--text3);font-size:12px;opacity:.3}
+
+/* conv cols bg */
+.ci{background:rgba(74,158,255,.06)}
+.cs{background:rgba(167,139,250,.06)}
+.cg{background:rgba(52,211,153,.06)}
+.cp{background:rgba(251,191,36,.06)}
+.ct{background:rgba(0,212,160,.08);font-weight:700;font-size:13px;color:var(--accent)}
+
+/* HIER line */
+.hier{font-size:10px;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'DM Mono',monospace;opacity:.7}
+
+/* VOLUME BAR */
+.vbar{height:5px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:6px}
+.vbar-fill{height:100%;border-radius:999px}
+
+/* ALERT */
+.alert{border-radius:10px;padding:12px 16px;font-size:12px;margin-bottom:16px;border:1px solid;display:flex;align-items:center;gap:10px}
+.alert-warn{background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.2);color:var(--amber)}
+.alert-info{background:rgba(245,166,35,.06);border-color:rgba(245,166,35,.15);color:#c8941a;font-size:11px}
+.alert-icon{font-size:16px;flex-shrink:0}
+
+/* RULE BOX */
+.rule-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--text3);margin-bottom:16px;font-family:'DM Mono',monospace;line-height:1.6}
+.rule-box strong{color:var(--accent)}
+
+/* NOTE DINHO */
+.note{background:rgba(245,166,35,.09);border:1px solid rgba(245,166,35,.22);border-radius:10px;padding:11px 15px;font-size:11px;color:#d9a832;margin-bottom:14px;font-family:'DM Mono',monospace}
+
+/* PROJ CARDS */
+.proj-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.proj-card{
+  background:linear-gradient(160deg,var(--bg2) 0%,rgba(27,35,60,.9) 100%);
+  border:1px solid var(--border);border-radius:16px;padding:20px;
+  position:relative;overflow:hidden;
+}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--border2),transparent);opacity:.8}
+.proj-card h4{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:'DM Mono',monospace}
+.proj-card .pv{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.3px}
+.proj-card .ps{font-size:11px;color:var(--text2);margin-top:4px}
+
+/* CHART WRAP */
+.chart-box{background:linear-gradient(160deg,var(--bg2) 0%,rgba(27,35,60,.9) 100%);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:14px}
+.chart-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+.leg-line{width:14px;height:2px;border-radius:2px}
+
+/* TAG eligible */
+.ok{color:var(--accent);font-weight:600}
+.no{color:var(--red);opacity:.7}
+
+/* SECTION TITLE */
+.sec{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- HEADER -->
+<div class="top-bar">
+  <div class="brand">
+    <div class="brand-dot">N</div>
+    <div>
+      <div class="brand-name">Nova Promotora</div>
+      <div class="brand-sub">CAMPANHA CAPITAL CONSIG · ABR–JUL 2026</div>
+    </div>
+  </div>
+  <div class="top-right">
+    <div class="chip" id="chip-dias">— dias restantes</div>
+    <div class="chip chip-live">AO VIVO</div>
+    <div class="chip">REF: <!--[CHIP_REF]-->ABR/26–JUN/26<!--[/CHIP_REF]--></div>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row">
+  <div class="kpi" style="--accent-line:var(--accent)">
+    <div class="kpi-label"><!--[KPI_P_LABEL]-->Acumulado ABR/26–JUN/26 <span style="font-size:9px;color:var(--amber)">*proj.</span><!--[/KPI_P_LABEL]--></div>
+    <div class="kpi-value"><!--[KPI_P_VAL]-->R$&nbsp;9,73M<!--[/KPI_P_VAL]--></div>
+    <div class="kpi-sub"><!--[KPI_P_SUB]-->de R$ 20M · 48,7% da meta<!--[/KPI_P_SUB]--></div>
+  </div>
+  <div class="kpi" style="--accent-line:var(--accent2)">
+    <div class="kpi-label">Operações</div>
+    <div class="kpi-value"><!--[KPI_OPS_VAL]-->2.176<!--[/KPI_OPS_VAL]--></div>
+    <div class="kpi-sub"><!--[KPI_OPS_SUB]-->contratos pagos (abr/26–jun/26)<!--[/KPI_OPS_SUB]--></div>
+  </div>
+  <div class="kpi" style="--accent-line:var(--siape)">
+    <div class="kpi-label">Convênio líder</div>
+    <div class="kpi-value" style="font-size:18px;padding-top:4px">SIAPE</div>
+    <div class="kpi-sub"><!--[KPI_CONV_SUB]-->1.276 ops · R$ 3.25M<!--[/KPI_CONV_SUB]--></div>
+  </div>
+  <div class="kpi" style="--accent-line:var(--amber)">
+    <div class="kpi-label">Dias restantes</div>
+    <div class="kpi-value" id="kpi-dias">—</div>
+    <div class="kpi-sub">até 31 de julho</div>
+  </div>
+</div>
+
+<!-- META PROGRESS -->
+<div class="meta-block">
+  <div class="meta-header">
+    <div>
+      <div class="meta-title">Meta Global do Grupo Nova</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px"><!--[META_DESC]-->R$ 7.378.954 realizados · R$ 9.733.392 projetados (ABR/26–JUN/26) de R$ 20.000.000<!--[/META_DESC]--></div>
+    </div>
+    <div class="meta-pct"><!--[META_PCT_TXT]-->48,7%<span style="font-size:11px;color:var(--amber);display:block;font-weight:400">*proj.</span><!--[/META_PCT_TXT]--></div>
+  </div>
+  <div class="meta-bar-track"><div class="meta-bar-fill" style="width:<!--[META_BAR_W]-->48,7<!--[/META_BAR_W]-->%"></div></div>
+  <div class="meta-nums"><!--[META_NUMS]--><span>R$ 7.378.954 realizados · <span style="color:var(--amber)">R$ 9.733.392* projetados</span></span><span>Meta: R$ 20.000.000</span><!--[/META_NUMS]--></div>
+</div>
+
+<!-- CONV CARDS -->
+<div class="conv-row">
+  <div class="conv-card" style="--cc:var(--pref)">
+    <div class="conv-tag" style="color:var(--pref)">PREF · peso 3</div>
+    <div class="conv-val"><!--[CV_PREF_V]-->R$ 2.901.331<!--[/CV_PREF_V]--></div>
+    <div class="conv-ops"><!--[CV_PREF_C]-->576 contratos<!--[/CV_PREF_C]--></div>
+  </div>
+  <div class="conv-card" style="--cc:var(--siape)">
+    <div class="conv-tag" style="color:var(--siape)">SIAPE · peso 2</div>
+    <div class="conv-val"><!--[CV_SIAPE_V]-->R$ 3.250.537<!--[/CV_SIAPE_V]--></div>
+    <div class="conv-ops"><!--[CV_SIAPE_C]-->1276 contratos<!--[/CV_SIAPE_C]--></div>
+  </div>
+  <div class="conv-card" style="--cc:var(--gov)">
+    <div class="conv-tag" style="color:var(--gov)">GOV · peso 3</div>
+    <div class="conv-val"><!--[CV_GOV_V]-->R$ 1.157.972<!--[/CV_GOV_V]--></div>
+    <div class="conv-ops"><!--[CV_GOV_C]-->292 contratos<!--[/CV_GOV_C]--></div>
+  </div>
+  <div class="conv-card" style="--cc:var(--inss)">
+    <div class="conv-tag" style="color:var(--inss)">INSS · peso 1</div>
+    <div class="conv-val"><!--[CV_INSS_V]-->R$ 69.114<!--[/CV_INSS_V]--></div>
+    <div class="conv-ops"><!--[CV_INSS_C]-->32 contratos<!--[/CV_INSS_C]--></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <button class="tab-btn on" onclick="tab('parceiros',this)">Parceiros</button>
+  <button class="tab-btn" onclick="tab('sups',this)">Superintendentes</button>
+  <button class="tab-btn" onclick="tab('regs',this)">Regionais</button>
+  <button class="tab-btn" onclick="tab('coms',this)">Comerciais</button>
+  <button class="tab-btn" onclick="tab('proj',this)">Projeção</button>
+</div>
+
+<!-- PARCEIROS -->
+<div id="panel-parceiros" class="panel on">
+  <div class="note">ℹ Parceiros da hierarquia do Dinho Silva concorrem normalmente ao prêmio.</div>
+  <div class="rule-box">Critério: pontuação por convênio &nbsp;·&nbsp; INSS ×1 &nbsp;·&nbsp; SIAPE ×2 &nbsp;·&nbsp; GOV ×3 &nbsp;·&nbsp; PREF ×3 &nbsp;·&nbsp; Desempate: maior volume financeiro &nbsp;·&nbsp; Sem produção mínima &nbsp;·&nbsp; <strong>Top 7 premiados com viagem a Jericoacoara</strong></div>
+  <div class="tbl-wrap">
+    <table class="tbl" style="min-width:700px">
+      <thead>
+        <tr>
+          <th class="l" style="width:36px" rowspan="2">#</th>
+          <th class="l" style="width:30%" rowspan="2">Parceiro · hierarquia</th>
+          <th colspan="2" class="ci">INSS ×1</th>
+          <th colspan="2" class="cs">SIAPE ×2</th>
+          <th colspan="2" class="cg">GOV ×3</th>
+          <th colspan="2" class="cp">PREF ×3</th>
+          <th style="width:54px" rowspan="2">Pts</th>
+          <th style="width:96px" rowspan="2">Volume</th>
+        </tr>
+        <tr>
+          <th class="ci" style="width:32px">Contr.</th><th class="ci" style="width:32px">Pts</th>
+          <th class="cs" style="width:32px">Contr.</th><th class="cs" style="width:32px">Pts</th>
+          <th class="cg" style="width:32px">Contr.</th><th class="cg" style="width:32px">Pts</th>
+          <th class="cp" style="width:32px">Contr.</th><th class="cp" style="width:32px">Pts</th>
+        </tr>
+      </thead>
+      <tbody id="tb-par"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SUPS -->
+<div id="panel-sups" class="panel">
+  <div class="note">ℹ DINHO SILVA (dono) excluído da premiação — produção contabiliza a meta global. Sem produção mínima.</div>
+  <div class="sec">Ranking por produção financeira · 2 vagas · Jericoacoara</div>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th class="l" style="width:40px">#</th><th class="l">Nome</th><th style="width:130px">Produção Acumulada</th><th>Volume relativo</th></tr></thead>
+      <tbody id="tb-sups"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- REGS -->
+<div id="panel-regs" class="panel">
+  <div class="note">ℹ Regionais excluídos: hierarquia Dinho Silva + quem acumula cargo de Superintendente. Sem produção mínima.</div>
+  <div class="sec">Ranking por produção financeira · 2 vagas · Jericoacoara</div>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th class="l" style="width:40px">#</th><th class="l">Nome</th><th style="width:130px">Produção Acumulada</th><th>Volume relativo</th></tr></thead>
+      <tbody id="tb-regs"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- COMS -->
+<div id="panel-coms" class="panel">
+  <div class="note">ℹ Comerciais excluídos: hierarquia Dinho Silva + quem acumula cargo de Regional ou Superintendente. Elegibilidade mínima: R$ 1.000.000 individual.</div>
+  <div class="sec">Ranking por produção financeira · 3 vagas · Jericoacoara</div>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th class="l" style="width:40px">#</th><th class="l">Nome</th><th style="width:130px">Produção Acumulada</th><th style="width:38%">Volume relativo</th><th style="width:70px">Elegível</th></tr></thead>
+      <tbody id="tb-coms"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PROJEÇÃO -->
+<div id="panel-proj" class="panel">
+  <div class="proj-row">
+    <div class="proj-card"><h4><!--[PROJ_C1_T]-->Acumulado ABR/26–JUN/26*<!--[/PROJ_C1_T]--></h4><div class="pv" style="color:var(--text)"><!--[PROJ_C1_V]-->R$&nbsp;9,73M<!--[/PROJ_C1_V]--></div><div class="ps"><!--[PROJ_C1_S]-->48,7% da meta<!--[/PROJ_C1_S]--></div></div>
+    <div class="proj-card"><h4>Ritmo necessário</h4><div class="pv" style="color:var(--amber)"><!--[PROJ_C2_V]-->R$&nbsp;10,27M/mês<!--[/PROJ_C2_V]--></div><div class="ps"><!--[PROJ_C2_S]-->1 meses restantes<!--[/PROJ_C2_S]--></div></div>
+    <div class="proj-card"><h4>Projeção campanha</h4><div class="pv" style="color:var(--red)"><!--[PROJ_C3_V]-->R$&nbsp;9,73M<!--[/PROJ_C3_V]--></div><div class="ps">ritmo do mês atual mantido</div></div>
+    <div class="proj-card"><h4>GAP para meta</h4><div class="pv" style="color:var(--red)"><!--[PROJ_C4_V]-->− R$&nbsp;10,27M<!--[/PROJ_C4_V]--></div><div class="ps"><!--[PROJ_C4_S]-->ritmo precisa subir ~253%<!--[/PROJ_C4_S]--></div></div>
+  </div>
+  <div class="chart-box">
+    <div class="chart-title">Evolução acumulada — projeção vs. necessário vs. meta</div>
+    <div style="position:relative;height:260px"><canvas id="chart-proj"></canvas></div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-line" style="background:var(--accent)"></div>Projeção ritmo atual</div>
+      <div class="leg-item"><div class="leg-line" style="background:var(--accent2);border-top:2px dashed var(--accent2);height:0"></div>Ritmo necessário</div>
+      <div class="leg-item"><div class="leg-line" style="background:var(--red);border-top:2px dashed var(--red);height:0"></div>Meta R$ 20M</div>
+    </div>
+  </div>
+  <div class="chart-box" style="font-size:13px;color:var(--text2);line-height:1.8">
+    <div class="chart-title">Análise</div>
+    <!--[ANALISE]-->Com R$ 3,43M em ABR/26 e R$ 2,91M projetados para Jun (4 de 21 dias úteis trabalhados), o acumulado projetado atinge <strong style="color:var(--text)">R$ 9,73M</strong> — <strong style="color:var(--accent)">48,7% da meta global</strong>. Para garantir os prêmios, a produção mensal precisa crescer <strong style="color:var(--amber)">~253%</strong> sobre o ritmo de Jun, atingindo R$ 10,27M/mês nos 1 meses restantes. <span style="color:var(--text3);font-size:11px">* Projeção de Jun baseada em 4 dos 21 dias úteis do mês (fator 5.250×).</span><!--[/ANALISE]-->
+  
+  </div>
+</div>
+
+</div><!-- /shell -->
+
+<script>
+var PAR=[
+  {n:'29876 - FERNANDO MOREIRA DOS SANTOS',ic:0,ip:0,sc:0,sp:0,gc:0,gp:0,pc:85,pp:255,tp:255,v:463870.71,com:'ALINE ROSE DE MELO',reg:'ARTHUR ROZA NETO',sup:'JESSICA COUTINHO DE AZEVEDO'},
+  {n:'3687 - ANGELICA DE MATTOS CARVALHO 09274848706',ic:0,ip:0,sc:0,sp:0,gc:0,gp:0,pc:70,pp:210,tp:210,v:445477.06,com:'LUAN MATHEUS DE CARVALHO CECHET',reg:'ARTHUR ROZA NETO',sup:'JESSICA COUTINHO DE AZEVEDO'},
+  {n:'53499 - IGGCRED EMPREENDIMENTOS LTDA',ic:0,ip:0,sc:102,sp:204,gc:0,gp:0,pc:0,pp:0,tp:204,v:226470.52,com:'ROBERTO DE MOURA LESSA',reg:'JHONATHAN ROSSI DA CRUZ',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'9702 - RR PROMOTORA DE CRÉDITO E COBRANÇAS LTDA',ic:0,ip:0,sc:72,sp:144,gc:13,gp:39,pc:0,pp:0,tp:183,v:235740.8,com:'THAYSE DO LIVRAMENTO PEREIRA',reg:'GEANDERSON LOCKS NAZARIO DE OLIV',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'96095 - ALVIM NUNES SERVICOS ESPECIALIZADOS LTDA',ic:0,ip:0,sc:1,sp:2,gc:0,gp:0,pc:58,pp:174,tp:176,v:136378.9,com:'ROBERTO DE MOURA LESSA',reg:'JHONATHAN ROSSI DA CRUZ',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'9326 - OIKOS SOLUCOES FINANCEIRAS',ic:0,ip:0,sc:0,sp:0,gc:1,gp:3,pc:55,pp:165,tp:168,v:333388.75,com:'CAMILA MATOS AGUIAR RIBEIRO',reg:'STELA PESSOA DOMINGOS',sup:'CASSIO LEMOS NETO'},
+  {n:'42 - BMT SOLUÇOES LTDA ME',ic:0,ip:0,sc:0,sp:0,gc:0,gp:0,pc:50,pp:150,tp:150,v:183259.66,com:'DANIELLE SIQUEIRA COUTO',reg:'JHONATHAN ROSSI DA CRUZ',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'8913 - CREDIMAIS SOLUCOES LTDA',ic:0,ip:0,sc:53,sp:106,gc:14,gp:42,pc:0,pp:0,tp:148,v:127459.91,com:'ROBERTO DE MOURA LESSA',reg:'JHONATHAN ROSSI DA CRUZ',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'5047 - GUILHERME SANTOS DE OLIVEIRA',ic:0,ip:0,sc:71,sp:142,gc:0,gp:0,pc:0,pp:0,tp:142,v:110454.26,com:'THAYSE DO LIVRAMENTO PEREIRA',reg:'GEANDERSON LOCKS NAZARIO DE OLIV',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'8818 - SOARES ATIVIDADES DE COBRANÇAS LTDA ME',ic:0,ip:0,sc:64,sp:128,gc:0,gp:0,pc:0,pp:0,tp:128,v:66671.76,com:'ANDREIA REGINA DE SOUZA BASTIDA',reg:'ALLAN MONTEIRO DE LIMA',sup:'CASSIO LEMOS NETO'},
+  {n:'6401 - UNIVERSE SOLUÇÕES FINANCEIRAS EIRELI',ic:0,ip:0,sc:58,sp:116,gc:0,gp:0,pc:0,pp:0,tp:116,v:85612.5,com:'AMANDA DA SILVA MARINS BARROS',reg:'JHONATHAN ROSSI DA CRUZ',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'80746 - 46.449.688 BRUNO POLICARPIO PEREIRA',ic:0,ip:0,sc:52,sp:104,gc:0,gp:0,pc:0,pp:0,tp:104,v:73362.62,com:'GABRIELA CRISTINA BORGES',reg:'ARTHUR ROZA NETO',sup:'JESSICA COUTINHO DE AZEVEDO'},
+  {n:'8060 - DIOGO COSTA',ic:0,ip:0,sc:48,sp:96,gc:2,gp:6,pc:0,pp:0,tp:102,v:98485.86,com:'ARIANE JANDIRA ASSUNCAO',reg:'RODRIGO VALCI SILVEIRA',sup:'CASSIO LEMOS NETO'},
+  {n:'5949 - PARIS CRED ASSESSORIA FINANCEIRA LTDA',ic:0,ip:0,sc:0,sp:0,gc:31,gp:93,pc:0,pp:0,tp:93,v:73408.05,com:'THAYSE DO LIVRAMENTO PEREIRA',reg:'GEANDERSON LOCKS NAZARIO DE OLIV',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'2167 - 57.284.313 ARTHUR SCHMIDT GERBA',ic:0,ip:0,sc:45,sp:90,gc:0,gp:0,pc:0,pp:0,tp:90,v:65476.9,com:'THAYSE DO LIVRAMENTO PEREIRA',reg:'GEANDERSON LOCKS NAZARIO DE OLIV',sup:'JHONATHAN ROSSI DA CRUZ'},
+  {n:'7455 - SMARTCRED',ic:0,ip:0,sc:0,sp:0,gc:29,gp:87,pc:0,pp:0,tp:87,v:81696.5,com:'ARIANE JANDIRA ASSUNCAO',reg:'RODRIGO VALCI SILVEIRA',sup:'CASSIO LEMOS NETO'},
+  {n:'1529 - KENNEDY PROMOTORA',ic:0,ip:0,sc:43,sp:86,gc:0,gp:0,pc:0,pp:0,tp:86,v:109400.51,com:'ARIANE JANDIRA ASSUNCAO',reg:'RODRIGO VALCI SILVEIRA',sup:'CASSIO LEMOS NETO'},
+  {n:'41972 - 49.179.482 JULIANA MUNIZ DO CARMO DA SILVA',ic:0,ip:0,sc:0,sp:0,gc:1,gp:3,pc:25,pp:75,tp:78,v:103667.56,com:'KARINE LOYANE MALHEIRO SILVA',reg:'ARTHUR ROZA NETO',sup:'JESSICA COUTINHO DE AZEVEDO'},
+  {n:'5114 - THAINÁ NOGUEIRA DA SILVA VIEIRA DOS SANTOS LIMA',ic:0,ip:0,sc:0,sp:0,gc:0,gp:0,pc:25,pp:75,tp:75,v:135154.8,com:'LUAN MATHEUS DE CARVALHO CECHET',reg:'ARTHUR ROZA NETO',sup:'JESSICA COUTINHO DE AZEVEDO'},
+  {n:'7021 - GISELE SILVERIO CONTI',ic:0,ip:0,sc:37,sp:74,gc:0,gp:0,pc:0,pp:0,tp:74,v:109985.36,com:'THAYSE DO LIVRAMENTO PEREIRA',reg:'GEANDERSON LOCKS NAZARIO DE OLIV',sup:'JHONATHAN ROSSI DA CRUZ'}
+];
+var SUPS=[
+  {n:'JESSICA COUTINHO DE AZEVEDO',v:2732820.96,d:false,tag:''},
+  {n:'JHONATHAN ROSSI DA CRUZ',v:2261415.58,d:false,tag:''},
+  {n:'CASSIO LEMOS NETO',v:1219993.89,d:false,tag:''},
+  {n:'FELIPE CUNHA DE JESUS',v:569454.87,d:false,tag:''},
+  {n:'SUPERINTENDENCIA CENTRO OESTE',v:382083.45,d:false,tag:''},
+  {n:'DINHO SILVA',v:213185.51,d:true,tag:'excluído'}
+];
+var REGS=[
+  {n:'ARTHUR ROZA NETO',v:2732820.96,d:false,tag:''},
+  {n:'GEANDERSON LOCKS NAZARIO DE OLIVEIRA',v:1160056.75,d:false,tag:''},
+  {n:'RODRIGO VALCI SILVEIRA',v:622510.08,d:false,tag:''},
+  {n:'STELA PESSOA DOMINGOS',v:473140.45,d:false,tag:''},
+  {n:'ALLEF KAYQUE MARQUES BONS OLHOS',v:382083.45,d:false,tag:''},
+  {n:'JOSE DIONISIO ALBUQUERQUE JUNIOR',v:275523.69,d:false,tag:''},
+  {n:'ALLAN MONTEIRO DE LIMA',v:124343.36,d:false,tag:''},
+  {n:'MELHOR CRÉDITO (REGIONAL)',v:16711.04,d:false,tag:''},
+  {n:'JHONATHAN ROSSI DA CRUZ',v:1084647.79,d:true,tag:'concorre como Sup.'},
+  {n:'FELIPE CUNHA DE JESUS',v:293931.18,d:true,tag:'concorre como Sup.'},
+  {n:'DINHO SILVA',v:85018.04,d:true,tag:'excluído'},
+  {n:'RENAN LELES DOS SANTOS (CHECK)',v:66757.38,d:true,tag:'excluído'},
+  {n:'NEXTT PROMOTORA (REGIONAL)',v:35416.71,d:true,tag:'excluído'},
+  {n:'BRUNO SANTANA FERREIRA',v:25993.38,d:true,tag:'excluído'}
+];
+var COMS=[
+  {n:'THAYSE DO LIVRAMENTO PEREIRA',v:1070181.05,d:false,tag:''},
+  {n:'LUAN MATHEUS DE CARVALHO CECHET',v:977738.09,d:false,tag:''},
+  {n:'ALINE ROSE DE MELO',v:686514.86,d:false,tag:''},
+  {n:'ROBERTO DE MOURA LESSA',v:590633.6,d:false,tag:''},
+  {n:'ARIANE JANDIRA ASSUNCAO',v:586864.6,d:false,tag:''},
+  {n:'CAMILA MATOS AGUIAR RIBEIRO',v:441430.7,d:false,tag:''},
+  {n:'KARINE LOYANE MALHEIRO SILVA',v:399586.63,d:false,tag:''},
+  {n:'DANIELLE SIQUEIRA COUTO',v:370118.13,d:false,tag:''},
+  {n:'LEONARDO GOMES DEUDEGANT',v:335897.98,d:false,tag:''},
+  {n:'KELI PEREIRA DOS SANTOS',v:256989.99,d:false,tag:''},
+  {n:'LUIS FERNANDO BERTHOLDO',v:255689.18,d:false,tag:''},
+  {n:'ALVARO BEZERRA ARAUJO',v:248883.55,d:false,tag:''},
+  {n:'LETICIA MAZIERO MENESES',v:144482.16,d:false,tag:''},
+  {n:'AMANDA DA SILVA MARINS BARROS',v:109320.47,d:false,tag:''},
+  {n:'GABRIELA CRISTINA BORGES',v:98528.76,d:false,tag:''},
+  {n:'MARIA EDUARDA BOGONI BRUSTOLIN',v:89875.7,d:false,tag:''},
+  {n:'GRAZIELLI MACHADO DA SILVA',v:68340.29,d:false,tag:''},
+  {n:'ANDREIA REGINA DE SOUZA BASTIDA',v:66671.76,d:false,tag:''},
+  {n:'TIAGO DA SILVA CERQUEIRA',v:49547.36,d:false,tag:''},
+  {n:'LUDMILA KARINA SILVA LOPES',v:43643.0,d:false,tag:''},
+  {n:'ALEX DA PAIXAO MARTINS',v:31709.75,d:false,tag:''},
+  {n:'GABRIELA GRASSO STIVAL',v:29303.19,d:false,tag:''},
+  {n:'ODAILTON SOUSA MALVEIRA',v:27273.47,d:false,tag:''},
+  {n:'RICHARD BIANO DOS REIS',v:19974.55,d:false,tag:''},
+  {n:'VIVIANE MOURA DE SOUSA',v:17774.16,d:false,tag:''},
+  {n:'MAYARA CRISTINA HATTENHAUER',v:17427.8,d:false,tag:''},
+  {n:'VALERIA DA ROCHA GASPARIDIS (MELHOR CREDITO)',v:16711.04,d:false,tag:''},
+  {n:'ADRIANA APARECIDA GUIMARAES',v:14575.59,d:false,tag:''},
+  {n:'ELIZABETE REGODANSO BARBOSA OKAMOTO',v:14028.6,d:false,tag:''},
+  {n:'PATRICIA ARBAITER SOARES DA SILVA',v:12188.44,d:false,tag:''},
+  {n:'CRISTINA CIANO ARAUJO DE ANDRADE',v:11089.29,d:false,tag:''},
+  {n:'LARYSSA SANTOS DE MELO',v:7444.41,d:false,tag:''},
+  {n:'SERGIO SCHMITT FRANCA',v:5662.64,d:false,tag:''},
+  {n:'FABIANO NETO',v:3482.49,d:false,tag:''},
+  {n:'DINHO SILVA',v:52802.09,d:true,tag:'excluído'},
+  {n:'GUILHERME MACHADO DE CAMARGO (CHECK)',v:52153.51,d:true,tag:'excluído'},
+  {n:'ALLEF KAYQUE MARQUES BONS OLHOS',v:46185.47,d:true,tag:'concorre como Reg.'},
+  {n:'BRUNO SANTANA FERREIRA',v:32215.95,d:true,tag:'excluído'},
+  {n:'LUANA BOSSLE RIBEIRO (NEXTT)',v:19780.57,d:true,tag:'excluído'},
+  {n:'FILIPE JONATAS SILVA SOUZA CHECK',v:14603.87,d:true,tag:'excluído'},
+  {n:'WEPAY',v:13667.43,d:true,tag:'excluído'},
+  {n:'WEPAY 1',v:12325.95,d:true,tag:'excluído'},
+  {n:'ANDRE LUIZ MAZZOLA (NEXTT)',v:8607.31,d:true,tag:'excluído'},
+  {n:'ANDERSON HIROSHI OYE (NEXTT)',v:4014.57,d:true,tag:'excluído'},
+  {n:'ERIS GREIDON HARDEN VIEIRA FILHO (NEXTT)',v:3014.26,d:true,tag:'excluído'}
+];
+
+function fv(v){return'R$ '+Math.round(v).toLocaleString('pt-BR');}
+function ab(s,n){return s&&s.length>n?s.substring(0,n)+'…':s;}
+function z(v){return v===0?'<span style="opacity:.2">—</span>':String(v);}
+
+function posNum(pos,vagas,isDinho){
+  if(isDinho)return'<span class="pos px">—</span>';
+  var cls=pos===1?'p1':pos===2?'p2':(pos===3&&vagas>=3)?'p3':pos<=vagas?'ppr':'pout';
+  return'<span class="pos '+cls+'">'+pos+'</span>';
+}
+function rc(pos,vagas,isDinho){
+  if(isDinho)return'row-out';
+  if(pos===1)return'row-g1';
+  if(pos===2)return'row-g2';
+  if(pos===3&&vagas>=3)return'row-g3';
+  if(pos<=vagas)return'row-pr';
+  return'row-out';
+}
+
+function buildPar(){
+  var h='';
+  PAR.forEach(function(p,i){
+    var pos=i+1,V=7,cls=rc(pos,V,false);
+    h+='<tr class="'+cls+'">';
+    h+='<td style="text-align:right;padding:10px 10px 10px 0">'+posNum(pos,V,false)+'</td>';
+    h+='<td style="padding:8px 10px"><div style="font-size:12px;font-weight:'+(pos<=V?600:400)+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+p.n+'">'+p.n+'</div><div class="hier">🧑 '+ab(p.com,22)+' · 📍 '+ab(p.reg,20)+' · 🏢 '+ab(p.sup,22)+'</div></td>';
+    h+='<td class="ci"><span class="cell c">'+z(p.ic)+'</span></td>';
+    h+='<td class="ci"><span class="cell c" style="font-weight:'+(p.ip?600:400)+'">'+z(p.ip)+'</span></td>';
+    h+='<td class="cs"><span class="cell c">'+z(p.sc)+'</span></td>';
+    h+='<td class="cs"><span class="cell c" style="font-weight:'+(p.sp?600:400)+'">'+z(p.sp)+'</span></td>';
+    h+='<td class="cg"><span class="cell c">'+z(p.gc)+'</span></td>';
+    h+='<td class="cg"><span class="cell c" style="font-weight:'+(p.gp?600:400)+'">'+z(p.gp)+'</span></td>';
+    h+='<td class="cp"><span class="cell c">'+z(p.pc)+'</span></td>';
+    h+='<td class="cp"><span class="cell c" style="font-weight:'+(p.pp?600:400)+'">'+z(p.pp)+'</span></td>';
+    h+='<td class="ct"><span class="cell c">'+p.tp+'</span></td>';
+    h+='<td><span class="cell r" style="font-size:11px;color:var(--text3)">'+fv(p.v)+'</span></td>';
+    h+='</tr>';
+  });
+  document.getElementById('tb-par').innerHTML=h;
+}
+
+function buildTime(data,vagas,tbId,showMin){
+  var validos=data.filter(function(d){return!d.d;});
+  var maxV=validos.length?validos[0].v:1;
+  var h='';var pos=0;
+  data.forEach(function(d){
+    var isd=d.d;
+    if(!isd)pos++;
+    var cls=isd?'row-out':rc(pos,vagas,false);
+    var pBar=isd?0:Math.round(d.v/maxV*100);
+    var bcolor=(pos<=vagas&&!isd)?'var(--accent)':'var(--text3)';
+    var dm=isd?'<span style="font-size:10px;color:var(--amber);margin-left:6px">('+(d.tag||'excluído')+')</span>':'';
+    var elC=showMin?'<td style="text-align:center;padding:10px">'+(isd?'—':d.v>=1000000?'<span class="ok">✓</span>':'<span class="no">✗</span>')+'</td>':'';
+    h+='<tr class="'+cls+'">';
+    h+='<td style="text-align:right;padding:10px 10px 10px 0">'+posNum(pos,vagas,isd)+'</td>';
+    h+='<td style="padding:10px 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:'+((!isd&&pos<=vagas)?600:400)+'" title="'+d.n+'">'+d.n+dm+'</td>';
+    h+='<td><span class="cell r" style="font-family:\'DM Mono\',monospace;font-size:12px">'+fv(d.v)+'</span></td>';
+    h+='<td style="padding:10px 16px 10px 10px"><div class="vbar"><div class="vbar-fill" style="width:'+pBar+'%;background:'+bcolor+'"></div></div></td>';
+    h+=elC+'</tr>';
+  });
+  document.getElementById(tbId).innerHTML=h;
+}
+
+function tab(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});
+  document.getElementById('panel-'+id).classList.add('on');
+  btn.classList.add('on');
+  if(id==='proj')buildChart();
+}
+
+var ch=null;
+function buildChart(){
+  if(ch)ch.destroy();
+  <!--[CHART_VARS]-->var r=3425411,rm=2908423,acc=9733392,rn=10266608;<!--[/CHART_VARS]-->
+  ch=new Chart(document.getElementById('chart-proj'),{
+    type:'line',
+    data:{
+      labels:['Abr/26','Mai/26','Jun/26','Jul/26'],
+      datasets:[
+        {label:'Projeção',data:[r,acc,acc+rm,acc+rm*2],borderColor:'#00d4a0',backgroundColor:'rgba(0,212,160,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'#00d4a0',borderWidth:2.5},
+        {label:'Necessário',data:[r,acc,acc+rn,20000000],borderColor:'#0099ff',backgroundColor:'rgba(0,153,255,.04)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#0099ff',borderWidth:1.5,borderDash:[5,4]},
+        {label:'Meta',data:[20000000,20000000,20000000,20000000],borderColor:'#ff4d6d',borderDash:[8,5],borderWidth:1.5,pointRadius:0,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2233',titleColor:'#e8eaf0',bodyColor:'#8b92a8',borderColor:'rgba(255,255,255,.08)',borderWidth:1,callbacks:{label:function(ctx){return' '+fv(ctx.parsed.y);}}}},
+      scales:{
+        y:{ticks:{color:'#555d72',callback:function(v){return'R$'+Math.round(v/1e6)+'M'},font:{family:'DM Mono, monospace',size:11}},grid:{color:'rgba(255,255,255,.04)'},min:0,max:22000000,border:{display:false}},
+        x:{ticks:{color:'#555d72',font:{family:'DM Mono, monospace',size:11}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+}
+
+function init(){
+  var fim=new Date('2026-07-31');
+  var dias=Math.max(0,Math.ceil((fim-new Date())/864e5));
+  document.getElementById('chip-dias').textContent=dias+' dias restantes';
+  document.getElementById('kpi-dias').textContent=dias;
+  buildPar();
+  buildTime(SUPS,2,'tb-sups',false);
+  buildTime(REGS,2,'tb-regs',false);
+  buildTime(COMS,3,'tb-coms',true);
+}
+init();
+</script>
+</body>
+</html>
